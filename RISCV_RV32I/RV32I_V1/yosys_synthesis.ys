@@ -1,0 +1,88 @@
+# Yosys Synthesis Script for RISC-V RV32I BRAM Optimization Analysis
+# This script synthesizes the design and generates detailed reports
+
+# Read all design files
+read_verilog -sv sources_1/new/ALU.v
+read_verilog -sv sources_1/new/ALU_CONTROL.v
+read_verilog -sv sources_1/new/BRANCH_CONDITION_CHECKER.v
+read_verilog -sv sources_1/new/CONTROL_UNIT.v
+read_verilog -sv sources_1/new/DECODE.v
+read_verilog -sv sources_1/new/EXECUTE_STAGE.v
+read_verilog -sv sources_1/new/EX_MEM.v
+read_verilog -sv sources_1/new/FORWARDING_MUXES.v
+read_verilog -sv sources_1/new/FORWARDING_UNIT.v
+read_verilog -sv sources_1/new/ID_EX.v
+read_verilog -sv sources_1/new/IF_ID.v
+read_verilog -sv "sources_1/new/INSTRUCTION MEMORY.v"
+read_verilog -sv sources_1/new/INSTRUCTION_FETCH.v
+read_verilog -sv sources_1/new/jump_detector.v
+read_verilog -sv sources_1/new/MEM_STAGE.v
+read_verilog -sv sources_1/new/MEM_WB.v
+read_verilog -sv sources_1/new/MUX_3_TO_1.v
+read_verilog -sv sources_1/new/PC_MUX.v
+read_verilog -sv sources_1/new/REGFILE.v
+read_verilog -sv sources_1/new/RISC_V_PROCESSOR.v
+read_verilog -sv sources_1/new/SIGN_EXTEND.v
+read_verilog -sv "sources_1/new/STALLING UNIT.v"
+read_verilog -sv sources_1/new/stalling_mux.v
+read_verilog -sv sources_1/new/main.v
+
+# Set top module
+hierarchy -check -top main
+
+# Print design hierarchy
+echo "=== Design Hierarchy ==="
+hierarchy -check
+
+# Elaborate design
+proc; opt; fsm; opt; memory; opt
+
+# Print statistics before technology mapping
+echo ""
+echo "=== Statistics Before Technology Mapping ==="
+stat
+
+# Check for memory inference
+echo ""
+echo "=== Memory Analysis ==="
+memory
+
+# Map to Xilinx primitives (simulate Zynq-7020)
+echo ""
+echo "=== Mapping to Xilinx Primitives ==="
+synth_xilinx -top main -family xc7
+
+# Print final statistics
+echo ""
+echo "=== Final Statistics After Xilinx Mapping ==="
+stat
+
+# Generate detailed reports
+echo ""
+echo "=== Detailed Resource Report ==="
+stat -tech xilinx
+
+# Check for BRAM inference
+echo ""
+echo "=== BRAM Inference Check ==="
+# Look for RAMB primitives (Block RAM)
+select -module main t:RAMB* -count
+select -clear
+
+# Look for distributed RAM (LUT RAM)
+echo "=== Distributed RAM Check ==="
+select -module main t:RAM* -count
+select -clear
+
+# Write synthesized netlist
+write_verilog -noattr synthesis_output/synthesized_netlist_bram.v
+
+# Write JSON for further analysis
+write_json synthesis_output/design_bram.json
+
+# Generate DOT file for visualization
+show -format dot -prefix synthesis_output/design_hierarchy
+
+echo ""
+echo "=== Synthesis Complete ==="
+echo "Reports generated in synthesis_output/"

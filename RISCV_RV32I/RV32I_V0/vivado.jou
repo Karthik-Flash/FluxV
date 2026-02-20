@@ -1,0 +1,15 @@
+#-----------------------------------------------------------
+# Vivado v2022.2 (64-bit)
+# SW Build 3671981 on Fri Oct 14 05:00:03 MDT 2022
+# IP Build 3669848 on Fri Oct 14 08:30:02 MDT 2022
+# Start of session at: Fri Feb 20 12:42:06 2026
+# Process ID: 7712
+# Current directory: C:/KarDRIVE/Projects/Cognichip/RISCV_RV32I/v0_baseline/RV32I_V0
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent37612 C:\KarDRIVE\Projects\Cognichip\RISCV_RV32I\v0_baseline\RV32I_V0\RV32I_V0.xpr
+# Log file: C:/KarDRIVE/Projects/Cognichip/RISCV_RV32I/v0_baseline/RV32I_V0/vivado.log
+# Journal file: C:/KarDRIVE/Projects/Cognichip/RISCV_RV32I/v0_baseline/RV32I_V0\vivado.jou
+# Running On: Karthik, OS: Windows, CPU Frequency: 2803 MHz, CPU Physical cores: 14, Host memory: 16890 MB
+#-----------------------------------------------------------
+start_gui
+open_project C:/KarDRIVE/Projects/Cognichip/RISCV_RV32I/v0_baseline/RV32I_V0/RV32I_V0.xpr
+update_compile_order -fileset sources_1
